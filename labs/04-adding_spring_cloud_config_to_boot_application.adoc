@@ -267,6 +267,7 @@ applications:
   timeout: 180
   env:
     JAVA_OPTS: -Djava.security.egd=file:///dev/urandom
+    TRUST_CERTS: api.sys.escondido.cf-app.com
   services:
   - config-server
 ---------------------------------------------------------------------
