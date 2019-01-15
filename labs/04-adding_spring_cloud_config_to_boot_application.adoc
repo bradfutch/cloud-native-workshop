@@ -234,7 +234,7 @@ Create a file named `config-server.json` and update its contents to be
 ---------------------------------------------------------------------
 {
   "git": { 
-    "uri": "https://github.com/pacphi/config-repo"
+    "uri": "https://github.com/bradfutch/config-repo"
   }
 }
 ---------------------------------------------------------------------
