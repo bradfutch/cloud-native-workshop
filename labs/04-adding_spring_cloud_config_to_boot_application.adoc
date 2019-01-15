@@ -66,6 +66,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-data-rest')
     compile('org.springframework.boot:spring-boot-starter-hateoas')
+    compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.data:spring-data-rest-hal-browser')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('io.pivotal.spring.cloud:spring-cloud-services-starter-config-client')
@@ -104,6 +105,15 @@ publishing {
         mavenLocal()
     }
 }
+---------------------------------------------------------------------
+
+. Also you need to edit the _gradle.properties_ file and add the following lines : 
+
+[source, bash]
+---------------------------------------------------------------------
+application.name = 'Cloud Native Spring'
+application.description = 'A cloud native spring boot application for fun'
+application.version = '1.0-SNAPSHOT'
 ---------------------------------------------------------------------
 
 . Add an _@Value_ annotation, private field, and update the existing _@RequestMapping_ annotated method to employ it in _io.pivotal.controller.GreetingController_ (/cloud-native-spring/src/main/java/io/pivotal/controller/GreetingController.java):
