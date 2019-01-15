@@ -141,6 +141,7 @@ public class CloudNativeSpringApplication {
 		SpringApplication.run(CloudNativeSpringApplication.class, args);
 	}
 
+  @Order(101)
 	@Configuration
 	static class ApplicationSecurityOverride extends WebSecurityConfigurerAdapter {
 
@@ -270,6 +271,7 @@ applications:
   timeout: 180 # to give time for the data to import
   env:
     JAVA_OPTS: -Djava.security.egd=file:///dev/urandom
+    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
     TRUST_CERTS: api.sys.escondido.cf-app.com
   services:
   - service-registry
