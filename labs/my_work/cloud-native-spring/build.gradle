@@ -76,6 +76,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('io.pivotal.spring.cloud:spring-cloud-services-starter-config-client')
+    compile('io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry')
     runtime('com.h2database:h2')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
