@@ -51,6 +51,14 @@ repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/snapshot" }
 	maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://repo.spring.io/plugins-release" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.M3"
+        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.0.3.RELEASE"
+    }
 }
 
 
@@ -65,7 +73,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-rest')
     compile('org.springframework.boot:spring-boot-starter-hateoas')
     compile('org.springframework.data:spring-data-rest-hal-browser')
+    compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile('io.pivotal.spring.cloud:spring-cloud-services-starter-config-client')
     runtime('com.h2database:h2')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
