@@ -16,6 +16,10 @@ management:
     git:
       mode: full
 
+feign:
+  hystrix:
+    enabled: true
+
 info: # add this section
   build:
     name: @application.name@
