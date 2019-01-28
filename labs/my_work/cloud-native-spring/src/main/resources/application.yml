@@ -23,6 +23,7 @@ info:
     description: @project.description@
     version: @project.version@
 
+greeting: "Local Hello "
 
 
 ---
@@ -33,3 +34,5 @@ management:
   cloudfoundry:
     enabled: true
     skip-ssl-validation: true
+
+greeting: "Cloud Hello "
