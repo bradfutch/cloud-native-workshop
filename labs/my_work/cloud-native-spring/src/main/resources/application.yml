@@ -15,9 +15,9 @@ management:
 
 info:
   build:
-    name: @project.name@
-    description: @project.description@
-    version: @project.version@
+    name: 'cloud-native-spring'
+    description: 'A simple Cloud Native Spring application demonstrating Spring Boot'
+    version: 1.0-SNAPSHOT
 
 
 
