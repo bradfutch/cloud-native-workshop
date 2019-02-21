@@ -6,106 +6,49 @@ In this lab we'll utilize Spring Boot and Spring Cloud to configure our applicat
 
 These features are added by adding _spring-cloud-services-starter-config-client_ to the classpath.  
 
-. Delete your exisiting Gradle build file, found here: */cloud-native-spring/build.gradle*.  We're going to make a few changes. Create a new */cloud-native-spring/build.gradle* then cut-and-paste the content below into it and save. 
+. Make the following changes to your _pom.xml_
 +
-Adding a dependency management plugin and other miscellaneous configuration.
+Add 2 dependencies like so :
 +
 [source,groovy]
 ---------------------------------------------------------------------
-buildscript {
-    ext {
-	   springBootVersion = '2.1.1.RELEASE'
-    }
-    repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://repo.spring.io/snapshot" }
-	    maven { url "https://repo.spring.io/milestone" }
-        mavenCentral()
-    }
-    dependencies {
-	    classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:2.0.0-beta1")
-	    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
-}
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'com.gorylenko.gradle-git-properties'
-apply plugin: 'io.spring.dependency-management'
-
-gitProperties {
-    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
-    dateFormatTimeZone = "UTC"
-    dotGitDirectory = "${project.rootDir}/../../../.."
-}
-
-import org.apache.tools.ant.filters.*
-
-processResources {
-    filter ReplaceTokens, tokens: [
-	    "application.name": project.property("application.name"),
-	    "application.description": project.property("application.description"),
-        "application.version": project.property("version")
-    ]
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.M3"
-        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.0.3.RELEASE"
-    }
-}
-
-dependencies {
-    compileOnly('org.projectlombok:lombok:1.18.4')
-    compile('javax.xml.bind:jaxb-api:2.4.0-b180725.0427')
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-data-rest')
-    compile('org.springframework.boot:spring-boot-starter-hateoas')
-    compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.springframework.data:spring-data-rest-hal-browser')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('io.pivotal.spring.cloud:spring-cloud-services-starter-config-client')
-    compile('org.flywaydb:flyway-core:5.2.0')
-    compile('com.zaxxer:HikariCP:3.2.0')
-    runtime('com.h2database:h2')
-    runtime('mysql:mysql-connector-java:8.0.13')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-}
-
-repositories {
-    maven { url "https://repo.spring.io/plugins-release" }
-    maven { url "https://repo.spring.io/snapshot" }
-	maven { url "https://repo.spring.io/milestone" }
-    mavenCentral()
-}
-
-jar {
-    enabled = true
-    excludes = ['**/application.yml']
-}
-
-bootJar {
-    enabled = true
-    classifier = 'exec'
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-	    groupId 'io.pivotal'
-            from components.java
-        }
-    }
-    repositories {
-        mavenLocal()
-    }
-}
+<dependency>
+  <groupId>io.pivotal.spring.cloud</groupId>
+  <artifactId>spring-cloud-services-starter-config-client</artifactId>
+  <scope>compile</scope>
+  <exclusions>
+    <exclusion>
+      <artifactId>tomcat-annotations-api</artifactId>
+      <groupId>org.apache.tomcat</groupId>
+    </exclusion>
+  </exclusions>
+</dependency>
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-security</artifactId>
+  <scope>compile</scope>
+  <exclusions>
+    <exclusion>
+      <artifactId>tomcat-annotations-api</artifactId>
+      <groupId>org.apache.tomcat</groupId>
+    </exclusion>
+  </exclusions>
+</dependency>
 ---------------------------------------------------------------------
++
+Also add the following under the `<dependencyManagement>` block :
++
+[soruce, groovy]
+---------------------------------------------------------------------
+<dependency>
+  <groupId>io.pivotal.spring.cloud</groupId>
+  <artifactId>spring-cloud-services-dependencies</artifactId>
+  <version>2.0.3.RELEASE</version>
+  <scope>import</scope>
+  <type>pom</type>
+</dependency>
+---------------------------------------------------------------------
++
 
 . Also you need to edit the _gradle.properties_ file and add the following lines : 
 
@@ -205,7 +148,7 @@ spring:
 +
 [source,bash]
 ---------------------------------------------------------------------
-gradle clean bootRun
+mvn clean spring-boot:run
 ---------------------------------------------------------------------
 
 . Browse to http://localhost:8080/hello and verify you now see your new greeting.
@@ -288,7 +231,7 @@ applications:
 +
 [source,bash]
 ---------------------------------------------------------------------
-gradle clean build
+mvn clean install
 ---------------------------------------------------------------------
 
 . Push application into Cloud Foundry
