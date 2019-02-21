@@ -4,15 +4,21 @@ In this lab we'll utilize Spring Boot and Spring Cloud to configure our applicat
 
 == Update _Cloud-Native-Spring_ Boot Application to Register with Eureka
 
-. These features are added by adding _spring-cloud-services-starter-service-registry_ to the classpath. Open your Gradle build file, found here: */cloud-native-spring/build.gradle*. Add the following spring cloud services dependency:
+. These features are added by adding _spring-cloud-services-starter-service-registry_ to the classpath. Open your pom file, found here: */cloud-native-spring/pom.xml*. Add the following spring cloud services dependency:
 +
 [source,groovy]
 ---------------------------------------------------------------------
-dependencies {
-	// add this dependency
-	compile('io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry')
-}
-
+<dependency>
+      <groupId>io.pivotal.spring.cloud</groupId>
+      <artifactId>spring-cloud-services-starter-service-registry</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+      </exclusions>
+</dependency>
 ---------------------------------------------------------------------
 +
 
@@ -55,14 +61,14 @@ image::images/registry1.jpg[]
 +
 [source,bash]
 ---------------------------------------------------------------------
-gradle build
+mvn clean compile package
 ---------------------------------------------------------------------
 
 . For the 2nd half of this lab we'll need to have this artifact in our local repository, so install it with the following command:
 +
 [source,bash]
 ---------------------------------------------------------------------
-gradle publishToMavenLocal
+mvn install
 ---------------------------------------------------------------------
 
 . Push application into Cloud Foundry
@@ -93,20 +99,73 @@ As in Lab 1 we will start with a project that has most of what we need to get go
 +
 *_STS Import Help_*
 +
-Select _File > Import…_. In the susequent dialog choose _Gradle > Existing Gradle Project_ then click the _Next_ button. In the _Import Gradle Project_ dialog browse to the _cloud-native-spring_ directory (e.g. _devops-workshop/labs/my_work/cloud-native-spring-ui_) then click the _Open_ button, then click the _Finish_ button.
+Select _File > Import…_. In the susequent dialog choose _Maven > Existing Maven Project_ then click the _Next_ button. In the _Import Maven Project_ dialog browse to the _cloud-native-spring_ directory (e.g. _devops-workshop/labs/my_work/cloud-native-spring-ui_) then click the _Open_ button, then click the _Finish_ button.
 
-. As before, we need to add _spring-cloud-services-starter-service-registry_ and some collaborating dependencies to the classpath.  Add this to your _build.gradle_:
+. As before, we need to add _spring-cloud-services-starter-service-registry_ and some collaborating dependencies to the classpath.  Add this to your _pom.xml_:
 +
 [source,groovy]
 ---------------------------------------------------------------------
-dependencies {
-	 // add these dependencies
-	 compile('io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry')
-   compile('org.springframework.cloud:spring-cloud-starter-openfeign')
-   compile('org.springframework.cloud:spring-cloud-starter-netflix-ribbon')
-   compile('org.hibernate:hibernate-core:5.3.7.Final')
-}
-
+<dependency>
+      <groupId>io.pivotal.spring.cloud</groupId>
+      <artifactId>spring-cloud-services-starter-service-registry</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>5.3.7.Final</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+</dependency>
 ---------------------------------------------------------------------
 +
 We'll also be using the Domain object from our main Boot application.  Add that as a dependency too:
@@ -245,7 +304,7 @@ spring:
 +
 [source,bash]
 ---------------------------------------------------------------------
-gradle build -x test
+mvn clean compile package -DskipTests=true
 ---------------------------------------------------------------------
 +
 -> Note that we're skipping tests here (because we now have a dependency on a running instance of _cloud-native-spring_).
