@@ -53,6 +53,11 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('com.vaadin:vaadin-spring-boot-starter')
+    compile('io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry')
+    compile('org.springframework.cloud:spring-cloud-starter-openfeign')
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-ribbon')
+    compile('org.hibernate:hibernate-core:5.3.7.Final')
+    compile('io.pivotal:cloud-native-spring:1.0-SNAPSHOT')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
