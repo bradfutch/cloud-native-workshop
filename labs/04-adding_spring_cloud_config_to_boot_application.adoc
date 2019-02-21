@@ -52,6 +52,22 @@ processResources {
     ]
 }
 
+sourceSets {
+  test {
+    resources {
+      srcDir 'src/main/resources'
+    }
+  }
+}
+
+processTestResources {
+    filter ReplaceTokens, tokens: [
+	    "project.name": project.property("application.name"),
+	    "project.description": project.property("application.description"),
+        "project.version": project.property("version")
+    ]
+}
+
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.M3"
