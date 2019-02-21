@@ -18,9 +18,9 @@ management:
 
 info: # add this section
   build:
-    name: @application.name@
-    description: @application.description@
-    version: @application.version@
+    name: 'Cloud Native Spring (Front-end)'
+    description: 'Spring Boot powered Vaadin UI that transacts the Cloud Native Spring (Back-end) to render a simple table of cities'
+    version: 1.0-SNAPSHOT
 
 ---
 spring:

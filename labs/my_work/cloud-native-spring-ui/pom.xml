@@ -1,7 +1,8 @@
+<?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.pivotal</groupId>
-  <artifactId>cloud-native-spring</artifactId>
+  <artifactId>cloud-native-spring-ui</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -12,10 +13,10 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.1.2.RELEASE</version>
         <configuration>
                 <classifier>exec</classifier>
         </configuration>
-        <version>2.1.2.RELEASE</version>
         <executions>
           <execution>
             <goals>
@@ -24,7 +25,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+    <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
         <executions>
@@ -86,44 +87,9 @@
           <artifactId>tomcat-annotations-api</artifactId>
           <groupId>org.apache.tomcat</groupId>
         </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.16.6</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.pivotal.spring.cloud</groupId>
-      <artifactId>spring-cloud-services-starter-service-registry</artifactId>
-      <scope>compile</scope>
-      <exclusions>
         <exclusion>
-          <artifactId>tomcat-annotations-api</artifactId>
-          <groupId>org.apache.tomcat</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>io.pivotal.spring.cloud</groupId>
-      <artifactId>spring-cloud-services-starter-config-client</artifactId>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>tomcat-annotations-api</artifactId>
-          <groupId>org.apache.tomcat</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>tomcat-annotations-api</artifactId>
-          <groupId>org.apache.tomcat</groupId>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -136,49 +102,9 @@
           <artifactId>tomcat-annotations-api</artifactId>
           <groupId>org.apache.tomcat</groupId>
         </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <scope>compile</scope>
-      <exclusions>
         <exclusion>
-          <artifactId>tomcat-annotations-api</artifactId>
-          <groupId>org.apache.tomcat</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-rest</artifactId>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>tomcat-annotations-api</artifactId>
-          <groupId>org.apache.tomcat</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-hateoas</artifactId>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>tomcat-annotations-api</artifactId>
-          <groupId>org.apache.tomcat</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-rest-hal-browser</artifactId>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>tomcat-annotations-api</artifactId>
-          <groupId>org.apache.tomcat</groupId>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -191,12 +117,103 @@
           <artifactId>tomcat-annotations-api</artifactId>
           <groupId>org.apache.tomcat</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>runtime</scope>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-spring-boot-starter</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.pivotal.spring.cloud</groupId>
+      <artifactId>spring-cloud-services-starter-service-registry</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>5.3.7.Final</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.pivotal</groupId>
+      <artifactId>cloud-native-spring</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -207,16 +224,30 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>2.1.1.RELEASE</version>
+        <groupId>io.pivotal.spring.cloud</groupId>
+        <artifactId>spring-cloud-services-dependencies</artifactId>
+        <version>2.0.3.RELEASE</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
       <dependency>
-        <groupId>io.pivotal.spring.cloud</groupId>
-        <artifactId>spring-cloud-services-dependencies</artifactId>
-        <version>2.0.3.RELEASE</version>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>Finchley.SR2</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-bom</artifactId>
+        <version>8.6.1</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>2.0.7.RELEASE</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
