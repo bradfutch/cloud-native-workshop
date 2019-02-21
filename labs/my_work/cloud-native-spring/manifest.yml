@@ -4,7 +4,7 @@ applications:
   random-route: true
   instances: 1
   memory: 1G
-  path: ./build/libs/cloud-native-spring-1.0-SNAPSHOT-exec.jar
+  path: ./target/cloud-native-spring-1.0-SNAPSHOT.jar
   buildpacks:
   - java_buildpack_offline
   stack: cflinuxfs3
