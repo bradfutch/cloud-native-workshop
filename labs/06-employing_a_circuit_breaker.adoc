@@ -4,14 +4,25 @@ In this lab we'll utilize Spring Boot and Spring Cloud to make our UI Applicatio
 
 == Define a Circuit Breaker within the _UI Application_
 
-. These features are added by adding _spring-cloud-services-starter-circuit-breaker_ to the classpath.  Open your Gradle build file, found here: */cloud-native-spring-ui/build.gradle*.  Add the following Spring Cloud Services dependency:
+. These features are added by adding _spring-cloud-services-starter-circuit-breaker_ to the classpath.  Open your pom file, found here: */cloud-native-spring-ui/pom.xml*.  Add the following Spring Cloud Services dependency:
 +
 [source,groovy]
 ---------------------------------------------------------------------
-dependencies {
-	// add this dependency
-	compile('io.pivotal.spring.cloud:spring-cloud-services-starter-circuit-breaker')
-}
+<dependency>
+      <groupId>io.pivotal.spring.cloud</groupId>
+      <artifactId>spring-cloud-services-starter-circuit-breaker</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-annotations-api</artifactId>
+          <groupId>org.apache.tomcat</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+</dependency>
 ---------------------------------------------------------------------
 
 . The first thing we need to add to our application is an _@EnableCircuitBreaker_ annotation to the Spring Boot application.  Add this annotation below the other ones on the _CloudNativeSpringUiApplication_ declaration in the class _io.pivotal.CloudNativeSpringUiApplication_ (/cloud-native-spring-ui/src/main/java/io/pivotal/CloudNativeSpringUiApplication.java):
@@ -92,7 +103,7 @@ image::images/dash.jpg[]
 +
 [source,bash]
 ---------------------------------------------------------------------
-gradle build -x test
+mvn clean compile package -DskipTests=true
 ---------------------------------------------------------------------
 
 . Push application into Cloud Foundry
