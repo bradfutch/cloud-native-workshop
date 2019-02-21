@@ -3,6 +3,10 @@ spring:
     hikari:
       connection-timeout: 60000
       maximum-pool-size: 5
+  application:
+    name: cloud-native-spring
+  main:
+    allow-bean-definition-overriding: true
 
 management:
   endpoints:
