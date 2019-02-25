@@ -12,16 +12,6 @@ In this lab we'll utilize Spring Boot and Spring Cloud to make our UI Applicatio
       <groupId>io.pivotal.spring.cloud</groupId>
       <artifactId>spring-cloud-services-starter-circuit-breaker</artifactId>
       <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>tomcat-annotations-api</artifactId>
-          <groupId>org.apache.tomcat</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-logging</artifactId>
-          <groupId>commons-logging</groupId>
-        </exclusion>
-      </exclusions>
 </dependency>
 ---------------------------------------------------------------------
 
