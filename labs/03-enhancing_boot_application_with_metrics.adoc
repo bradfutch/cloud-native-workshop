@@ -8,10 +8,11 @@ Spring Boot includes a number of additional features to help you monitor and man
 +
 [source,groovy]
 ---------------------------------------------------------------------
-dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    // other dependencies omitted
-}
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+    <scope>compile</scope>
+</dependency>
 
 ---------------------------------------------------------------------
 +
@@ -81,44 +82,41 @@ Spring Boot provides an endpoint (http://localhost:8080/actuator/info) that allo
 
 One thing that _actuator_ does well is expose information about the specific build and version control coordinates for a given deployment.
 
-. Edit the following file: */cloud-native-spring/build.gradle* Add the https://github.com/n0mer/gradle-git-properties[gradle-git-properties] plugin to your Gradle build. 
+. Edit the following file: */cloud-native-spring/pom.xml* Add the _git-commit-id-plugin_ to your pom like so : 
 +
-First, you'll need to be able to resolve the plugin so add the following to the _repositories{}_ section of the _buildscript{}_ block.
-+
-[source,groovy]
----------------------------------------------------------------------
-maven {
-    url "https://plugins.gradle.org/m2/"
-}
----------------------------------------------------------------------
-+
-Then, you must edit the file and add the plugin dependency within the _dependencies{}_ section of the _buildscript{}_ block. 
-+
-[source,groovy]
----------------------------------------------------------------------
-classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:2.0.0-beta1")
----------------------------------------------------------------------
-+
-You'll also activate the plugin and add a _gitProperties{}_ block just underneath the last _apply plugin:_ line.
-+
-[source,groovy]
----------------------------------------------------------------------
-apply plugin: 'com.gorylenko.gradle-git-properties'
 
-gitProperties {
-    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
-    dateFormatTimeZone = "UTC"
-    dotGitDirectory = "${project.rootDir}/../../.."
-}
+[source,groovy]
 ---------------------------------------------------------------------
-+
+<plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>2.1.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <verbose>true</verbose>
+          <dotGitDirectory>${project.basedir}/../../../.git</dotGitDirectory>
+          <dateFormat>MM-dd-yyyy '@' HH:mm:ss Z</dateFormat>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+          <failOnNoGitDirectory>true</failOnNoGitDirectory>
+        </configuration>
+</plugin>
+---------------------------------------------------------------------
+
 -> Note too that we are updating the path to the _.git_ directory.
-+
-The effect of all this configuration is that the _gradle-git-properties_ plugin adds Git branch and commit coordinates to the */actuator/info* endpoint.
+
+The effect of all this configuration is that the _git-commit-id-plugin_ plugin adds Git branch and commit coordinates to the */actuator/info* endpoint.
 
 . Run the _cloud-native-spring_ application:
 +
-  gradle clean bootRun
+  mvn spring-boot:run
++
 
 . Let's use httpie to verify that Git commit information is now included 
 +
@@ -142,9 +140,12 @@ http :8080/actuator/info
 
 . Stop the _cloud-native-spring_ application
 +
+
+
++
 *What Just Happened?*
 +
-By including the _gradle-git-properties_ plugin, details about git commit information will be included in the */actuator/info* endpoint. Git information is captured in a _git.properties_ file that is generated with the build. Review the following file: */cloud-native-spring/build/resources/main/git.properties*
+By including the _git-commit-id-plugin_ plugin, details about git commit information will be included in the */actuator/info* endpoint. Git information is captured in a _git.properties_ file that is generated with the build. Review the following file: */cloud-native-spring/build/resources/main/git.properties*
 
 == Include Build Info
 
@@ -160,31 +161,42 @@ info: # add this section
     version: @version@
 ---------------------------------------------------------------------
 +
-Note we're defining token delimited value-placeholders for each property.  In order to have these properties replaced, we'll need to add some further instructions to the _build.gradle_ file.
+Note we're defining token delimited value-placeholders for each property.  In order to have these properties replaced, we'll need to add some further instructions to the _pom.xml_ file.
 +
 -> if STS https://jira.spring.io/browse/STS-4201[reports a problem] with the application.yml due to @ character, the problem can safely be ignored.
 
-. Add the following directly underneath the _gitProperties{}_ block within *cloud-native-spring/build.gradle*
+. Add the following directly underneath the _<plugins>_ block within *cloud-native-spring/pom.xml*
 +
-[source,groovy]
+[source,xml]
 ---------------------------------------------------------------------
-import org.apache.tools.ant.filters.*
-
-processResources {
-    filter ReplaceTokens, tokens: [
-        "application.name": project.property("application.name"),
-        "application.description": project.property("application.description"),
-        "application.version": project.property("version")
-    ]
-}
+<plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <configuration>
+              <target name="replaceLocalTokens">
+                <property file="gradle.properties"/>
+                <replace file="src/main/resources/application.yml" token="@project.name@" value="${application.name}"/>
+                <replace file="src/main/resources/application.yml" token="@project.description@" value="${application.description}"/>
+                <replace file="src/main/resources/application.yml" token="@project.version@" value="${version}"/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+</plugin>
 ---------------------------------------------------------------------
-
++
 
 . Build and run the _cloud-native-spring_ application:
 +
 [source,bash]
 ---------------------------------------------------------------------
-gradle clean bootRun
+mvn clean spring-boot:run
 ---------------------------------------------------------------------
 
 . Again we'll use httpie to verify that the Build information is now included 
@@ -216,7 +228,7 @@ http :8080/actuator/info
 +
 *What Just Happened?*
 +
-We have mapped Gradle properties into the /actuator/info endpoint.
+We have mapped properties into the /actuator/info endpoint.
 +
 Read more about exposing data in the /actuator/info endpoint link:https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready[here]
 
@@ -232,9 +244,10 @@ Normally, the /actuator/health endpoint will only expose an UP or DOWN value.
   "status": "UP"
 }
 ---------------------------------------------------------------------
+
+. We want to expose more detail about the health and well-being of the application, so we're going to need a bit more configuration to _cloud-native-spring/src/main/resources/application.yml_, underneath the _management_ prefix, add
 +
-We want to expose more detail about the health and well-being of the application, so we're going to need a bit more configuration to _cloud-native-spring/src/main/resources/application.yml_, underneath the _management_ prefix, add
-+
+
 [source,yml]
 ---------------------------------------------------------------------
   endpoint:
@@ -244,9 +257,10 @@ We want to expose more detail about the health and well-being of the application
 
 . Run the cloud-native-spring application:
 +
+
 [source,bash]
 ---------------------------------------------------------------------
-gradle bootRun
+mvn clean spring-boot:run
 ---------------------------------------------------------------------
 
 . Use httpie to verify the output of the health endpoint
@@ -255,6 +269,7 @@ gradle bootRun
 ---------------------------------------------------------------------
 http :8080/actuator/health
 --------------------------------------------------------------------- 
+
 +
 Out of the box is a _DiskSpaceHealthIndicator_ that monitors health in terms of available disk space. Would your Ops team like to know if the app is close to running out of disk space? DiskSpaceHealthIndicator can be customized via _DiskSpaceHealthIndicatorProperties_. For instance, setting a different threshold for when to report the status as DOWN.
 +
@@ -283,6 +298,7 @@ Out of the box is a _DiskSpaceHealthIndicator_ that monitors health in terms of 
 ---------------------------------------------------------------------
 
 . Stop the cloud-native-spring application.
++
 
 . Create the class _io.pivotal.FlappingHealthIndicator_ (/cloud-native-spring/src/main/java/io/pivotal/FlappingHealthIndicator.java) and into it paste the following code:
 +
@@ -429,6 +445,7 @@ Spring Boot provides an endpoint http://localhost:8080/actuator/metrics that exp
 
 . Stop the cloud-native-spring application.
 
+
 == Deploy _cloud-native-spring_ to Pivotal Cloud Foundry
 
 . When running a Spring Boot application on Pivotal Cloud Foundry with the actuator endpoints enabled, you can visualize actuator management information on the Applications Manager app dashboard.  To enable this there are a few properties we need to add.  Add the following to */cloud-native-spring/src/main/resources/application.yml*:
@@ -445,20 +462,6 @@ management:
     skip-ssl-validation: true
 ---------------------------------------------------------------------
 
-. Let's review */cloud-native-spring/build.gradle*.  Note these lines:
-+
-[source, groovy]
----------------------------------------------------------------------
-jar {
-    enabled = true
-    excludes = ['**/application.yml']
-}
-
-bootJar {
-    enabled = true
-    classifier = 'exec'
-}
----------------------------------------------------------------------
 +
 -> Note the _bootJar_ plugin repackages the original artifact and creates a separate classified artifact. We wind up with 2 .jar files.
 
